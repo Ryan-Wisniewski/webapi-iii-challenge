@@ -78,15 +78,28 @@ function validatePostId(req, res, next) {
     console.log(req.params)
     // console.log(postDb.getById)
     // what would you compare id too?
-    if(id != id){
-        res.status(404).json({ error: 'Id not found'})
-    } else {
-    next()
-    } 
+    if(!id){
+        return res.status(404).json({ error: 'invalid id'})
+    }
+    postDb.getById(id)
+        .then(post => {
+            next()
+        })
+        .catch(err => {
+            res.status(400).json({ error: 'error proccesing request'})
+        })
+
+
+    // if(id != id){
+    //     res.status(404).json({ error: 'Id not found'})
+    // } else {
+    // next()
+    // } 
+
     // postDb.getById(id)
     //     .then(() => {
     //         next()
     //     })
 };
-router.use(validatePostId)
+// router.use(validatePostId) //for check
 module.exports = router;

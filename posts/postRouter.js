@@ -16,9 +16,9 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', validatePostId, (req, res) => {
-    // const { id } = req.params
+    const { id } = req.params
     // console.log(id)
-    postDb.getById(req.id)
+    postDb.getById(id)
         .then(post => {
             res.status(200).json(post)
         //     if(id){
@@ -74,7 +74,7 @@ router.put('/:id', validatePostId, (req, res) => {
 // custom middleware
 
 //fix this too
-//
+//kinda works not the way the readme want/
 function validatePostId(req, res, next) {
     const { id } = req.params
     console.log(req.params)
@@ -87,9 +87,10 @@ function validatePostId(req, res, next) {
         console.log('asdf', req.id)
         res.status(400).json({ error: 'id does not match'})
     }
+   
     
 
-
+//dkfjfj
     // if(id != id){
     //     res.status(404).json({ error: 'Id not found'})
     // } else {

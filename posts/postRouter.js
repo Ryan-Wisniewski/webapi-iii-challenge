@@ -15,9 +15,9 @@ router.get('/', (req, res) => {
         })
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', validatePostId, (req, res) => {
     const { id } = req.params
-    console.log(id)
+    // console.log(id)
     postDb.getById(id)
         .then(post => {
             if(id){
@@ -46,22 +46,47 @@ router.delete('/:id', validatePostId, (req, res) => {
     })
 })
 
-router.put('/:id', (req, res) => {
-    const { text, userId } = req.body
-    if ( !text || !userId){
-        return res.status(400).json({ errer: 'Please enter valid information'})
+//FIX THIS
+router.put('/:id', validatePostId, (req, res) => {
+    const { text, user_id } = req.body
+    const { id } = req.params
+    if ( !text || !user_id){
+        return res.status(400).json({ error: 'Please enter valid information'})
     } else {
-
+        postDb.update(id, req.body)
+        console.log(req.body)
+        .then(post => {
+            res.status(200).json(post)
+            // if(pot){
+            //     res.status(200).json(post)
+            // } else {
+            //     res.status(404).json({ error: 'Invalid Id'})
+            // }
+        })
+        .catch(err => {
+            res.status(500).json({ error: err})
+        })
     }
 
 });
 
 // custom middleware
 
+//fix this too
 function validatePostId(req, res, next) {
     const { id } = req.params
-    console.log(id)
+    console.log(req.params)
+    // console.log(postDb.getById)
+    // what would you compare id too?
+    if(id != id){
+        res.status(404).json({ error: 'Id not found'})
+    } else {
     next()
+    } 
+    // postDb.getById(id)
+    //     .then(() => {
+    //         next()
+    //     })
 };
 router.use(validatePostId)
 module.exports = router;

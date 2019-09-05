@@ -16,15 +16,16 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', validatePostId, (req, res) => {
-    const { id } = req.params
+    // const { id } = req.params
     // console.log(id)
-    postDb.getById(id)
+    postDb.getById(req.id)
         .then(post => {
-            if(id){
-                res.status(200).json(post)
-            } else {
-                res.status(404).json({ message: 'Please enter a calid id' })
-            }
+            res.status(200).json(post)
+        //     if(id){
+        //         res.status(200).json(post)
+        //     } else {
+        //         res.status(404).json({ message: 'Please enter a calid id' })
+        //     }
         })
         .catch(err => {
             res.status(500).json({ error: err})
@@ -73,21 +74,20 @@ router.put('/:id', validatePostId, (req, res) => {
 // custom middleware
 
 //fix this too
+//
 function validatePostId(req, res, next) {
     const { id } = req.params
     console.log(req.params)
     // console.log(postDb.getById)
     // what would you compare id too?
-    if(!id){
-        return res.status(404).json({ error: 'invalid id'})
+    if(req.id = req.params.id){
+        console.log('VALIDATED')
+        next()
+    } else {        
+        console.log('asdf', req.id)
+        res.status(400).json({ error: 'id does not match'})
     }
-    postDb.getById(id)
-        .then(post => {
-            next()
-        })
-        .catch(err => {
-            res.status(400).json({ error: 'error proccesing request'})
-        })
+    
 
 
     // if(id != id){
